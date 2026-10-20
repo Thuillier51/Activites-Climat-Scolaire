@@ -1,0 +1,199 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Climat scolaire | Activités express</title>
+<style>
+:root{--navy:#24324b;--orange:#ff9f43;--cream:#fffaf1;--green:#c9ead8;--pink:#f9d8dc}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--navy);font-family:Arial,sans-serif;line-height:1.5}
+header{background:var(--navy);color:white;text-align:center;padding:32px 18px}
+header .emoji{font-size:2.5rem}
+header h1{margin:8px 0;font-size:clamp(1.8rem,5vw,2.7rem)}
+header p{margin:0;color:#e8edf5}
+main{max-width:850px;margin:25px auto;padding:0 16px}
+.panel{background:white;border:2px solid #e9e5dc;border-radius:20px;padding:22px;margin-bottom:18px}
+h2{margin-top:0}
+label{display:block;font-weight:bold;margin:12px 0 6px}
+select,button{font:inherit;border-radius:12px;padding:12px;border:2px solid #d8dce3;width:100%;min-height:46px}
+select{background:white;color:var(--navy)}
+.filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+button{cursor:pointer;font-weight:bold}
+.primary{background:var(--orange);border-color:var(--orange);color:#202b40;margin-top:18px}
+.secondary{background:white;color:var(--navy);margin-top:10px}
+button:hover{filter:brightness(.97)}
+button:focus-visible,select:focus-visible{outline:3px solid #3678d5;outline-offset:2px}
+.result{background:var(--green);border:0}
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.pill{background:white;border-radius:30px;padding:5px 12px;font-size:.9rem;font-weight:bold}
+#activityTitle{font-size:1.7rem;margin:8px 0}
+.instructions{background:#fff;padding:15px;border-radius:12px}
+footer{text-align:center;padding:20px;color:#626d7c;font-size:.9rem}
+.small{font-size:.9rem;color:#596579}
+</style>
+</head>
+<body>
+<header>
+<div class="emoji">🌈 🤝 🎲</div>
+<h1>Climat scolaire</h1>
+<p>Une activité express pour mieux vivre ensemble !</p>
+</header>
+<main>
+<section class="panel">
+<h2>🎯 À toi de jouer !</h2>
+<p>Choisis ton groupe et le temps disponible, puis pioche une activité à proposer aux enfants.</p>
+<div class="filters">
+<div>
+<label for="age">Pour quel public ?</label>
+<select id="age">
+<option value="Tous">Tous les âges</option>
+<option value="Maternelle">Maternelle</option>
+<option value="Élémentaire">Élémentaire</option>
+</select>
+</div>
+<div>
+<label for="duration">Temps disponible</label>
+<select id="duration">
+<option value="Tous">Toutes les durées</option>
+<option value="2-3">2 à 3 minutes</option>
+<option value="4-5">4 à 5 minutes</option>
+</select>
+</div>
+<div>
+<label for="category">Thématique</label>
+<select id="category">
+<option value="Toutes">Toutes les thématiques</option>
+<option>Émotions</option>
+<option>Coopération</option>
+<option>Vivre-ensemble</option>
+<option>Retour au calme</option>
+<option>Expression</option>
+<option>Jeu de rôle</option>
+</select>
+</div>
+</div>
+<button class="primary" id="draw">🎲 Tirer une activité au hasard</button>
+<p class="small">Aucun matériel nécessaire pour les activités proposées.</p>
+</section>
+
+<section class="panel result" id="result" aria-live="polite">
+<p class="small">✨ Ta prochaine activité apparaîtra ici</p>
+<h2 id="activityTitle">Prêts à commencer ?</h2>
+<p id="intro">Clique sur le bouton pour découvrir une activité.</p>
+<div class="pills" id="pills"></div>
+<h3>🗣️ Consignes à donner aux enfants</h3>
+<div class="instructions" id="instructions">Choisis une activité pour afficher ses consignes.</div>
+<h3>🎯 Objectif psychosocial</h3>
+<p id="objective">Développer les compétences psychosociales et le vivre-ensemble.</p>
+<h3>🔄 Variante</h3>
+<p id="variant">Adapte les consignes à l'âge et à l'énergie du groupe.</p>
+<button class="secondary" id="again">🔄 Une autre activité</button>
+<button class="secondary" id="copy">📋 Copier les consignes</button>
+<p id="copyMessage" class="small" role="status"></p>
+</section>
+<section class="panel">
+<h2>💡 Le petit rappel de l'équipe</h2>
+<p>Ces activités sont des propositions simples pour soutenir les compétences psychosociales. L'enfant peut toujours choisir de passer son tour. On privilégie l'écoute, la bienveillance et l'absence de jugement.</p>
+</section>
+</main>
+<footer>Outil pédagogique — Climat scolaire · Ville d’Épernay</footer>
+<script>
+const activities = [
+["La météo intérieure","Émotions","2-3","Maternelle","Invitez les enfants à choisir un temps qu'ils ressentent : soleil, nuage, pluie ou vent. Chacun peut expliquer son choix ou simplement le montrer.","Reconnaître et exprimer ses émotions.","Proposez des cartes météo imaginaires ou mimez la météo."],
+["Le feu tricolore","Retour au calme","2-3","Tous","Rouge : on s'immobilise. Orange : on respire doucement. Vert : on reprend ses mouvements lentement. Faites trois tours.","Réguler son énergie et son attention.","Les enfants peuvent proposer les gestes de chaque couleur."],
+["Le compliment mystère","Vivre-ensemble","4-5","Élémentaire","Chacun pense à une qualité d'un camarade et la lui adresse avec respect. Veillez à ce que chacun puisse recevoir une parole positive.","Renforcer l'estime de soi et les relations positives.","En cercle, adressez collectivement un compliment au groupe."],
+["Le miroir","Coopération","2-3","Tous","Par deux, un enfant réalise lentement des gestes simples et l'autre les reproduit comme un miroir. Puis inversez les rôles.","Développer l'attention et l'empathie.","Faites le jeu sans parler."],
+["La respiration ballon","Retour au calme","2-3","Maternelle","Imaginez que votre ventre est un ballon. Inspirez doucement pour le gonfler, puis soufflez lentement pour le dégonfler. Répétez trois fois sans forcer.","Apprendre à revenir au calme.","Les enfants peuvent poser les mains sur leur ventre s'ils le souhaitent."],
+["Une solution, plusieurs idées","Expression","4-5","Élémentaire","Proposez une situation simple : deux enfants veulent le même jeu. En groupe, trouvez le plus d'idées possibles pour résoudre le problème sans vous moquer.","Développer la résolution de problèmes.","Demandez quelle solution respecte le mieux les besoins de chacun."],
+["Le chef d'orchestre","Coopération","2-3","Tous","Un enfant propose des gestes silencieux que le groupe reproduit. Changez de chef après quelques instants.","Coopérer et observer les autres.","Choisissez un chef discrètement pour que le groupe le découvre."],
+["La statue des émotions","Émotions","2-3","Maternelle","Annoncez une émotion : joie, tristesse, peur ou colère. Les enfants prennent une posture qui pourrait la représenter, sans obligation de parler.","Identifier les émotions à partir des expressions corporelles.","Demandez comment aider quelqu'un qui ressent cette émotion."],
+["Le débat du pouce","Expression","2-3","Élémentaire","Posez une question simple : « Est-ce facile de demander de l'aide ? » Pouce en haut, au milieu ou en bas. Écoutez quelques explications sans chercher une réponse unique.","Exprimer un avis et écouter des points de vue différents.","Laissez les enfants changer de position après avoir écouté."],
+["Le cercle des prénoms","Vivre-ensemble","2-3","Maternelle","Chacun dit son prénom avec un geste. Le groupe répète le prénom et le geste, en veillant à respecter le rythme de chacun.","Créer du lien et reconnaître chaque personne.","Ajoutez un mot positif que l'enfant choisit."],
+["Le défi silencieux","Coopération","4-5","Tous","En silence, le groupe doit se ranger par ordre de taille ou selon l'ordre alphabétique des prénoms. Observez comment les enfants s'organisent.","Communiquer autrement et coopérer.","Refaites le défi avec une autre consigne."],
+["La boîte à solutions","Jeu de rôle","4-5","Tous","Imaginez qu'un enfant est laissé à l'écart d'un jeu. Par petits groupes, proposez une phrase ou une action pour l'inclure.","Développer l'inclusion et l'empathie.","Jouez une courte scène avec une solution choisie."],
+["Le mot qui fait du bien","Vivre-ensemble","2-3","Tous","Chacun peut proposer un mot qui fait du bien : merci, bravo, bienvenue, s'il te plaît. Répétez les mots ensemble.","Favoriser un langage bienveillant.","Choisissez un mot à utiliser durant la journée."],
+["La pause des cinq sens","Retour au calme","2-3","Tous","En silence, repérez un élément que vous voyez, un son que vous entendez et une sensation agréable ou neutre. Chacun peut partager s'il le souhaite.","Revenir au moment présent et porter attention à son environnement.","Pour les plus grands, ajoutez une odeur ou une texture si cela est adapté."],
+["Le scénario du désaccord","Jeu de rôle","4-5","Élémentaire","Jouez une situation où deux personnes ne sont pas d'accord. Rejouez-la en utilisant « Je pense… », « Je ressens… » et « Je propose… ».","Exprimer un désaccord sans agresser.","Laissez le groupe inventer une autre fin."],
+["Le geste collectif","Coopération","2-3","Tous","Le groupe invente ensemble une petite chorégraphie de trois gestes. Chacun peut suggérer un geste ou passer son tour.","Construire quelque chose ensemble.","Essayez de refaire la séquence dans le silence."],
+["La couleur de mon humeur","Émotions","2-3","Tous","Chacun choisit mentalement une couleur qui correspond à son humeur. Les volontaires expliquent leur choix, sans interprétation des autres.","Mettre des mots ou des images sur son ressenti.","Demandez quelle couleur représenterait un moment agréable."],
+["Le droit de passer","Vivre-ensemble","2-3","Tous","Rappelez que chacun peut répondre, écouter ou passer son tour. Proposez une question légère, par exemple le jeu préféré du moment.","Respecter les limites et les choix de chacun.","Invitez le groupe à trouver une façon respectueuse d'accueillir un refus."],
+["Le compliment au groupe","Vivre-ensemble","2-3","Tous","Ensemble, trouvez trois choses positives que le groupe a réussies aujourd'hui : s'entraider, ranger, écouter ou partager.","Renforcer la cohésion du groupe.","Demandez une idée à ceux qui souhaitent parler."],
+["La machine imaginaire","Coopération","4-5","Tous","Un enfant réalise un mouvement répétitif accompagné d'un son doux. Les autres s'ajoutent un par un pour former une machine collective.","Coordonner ses actions et prendre sa place dans le groupe.","Faites ralentir puis arrêter la machine ensemble."],
+["Le détective des émotions","Émotions","4-5","Élémentaire","Décrivez une situation : « Mon ami ne veut pas jouer avec moi aujourd'hui. » Quelles émotions sont possibles ? Rappelez qu'on ne peut pas deviner avec certitude.","Comprendre que chacun peut ressentir des émotions différentes.","Imaginez une phrase pour demander à l'autre ce qu'il ressent."],
+["La phrase qui aide","Expression","2-3","Tous","Proposez des phrases utiles : « Tu veux de l'aide ? », « On essaie ensemble ? », « Tu peux jouer avec nous ». Répétez-les avec une voix chaleureuse.","Développer l'entraide et la communication.","Inventez une phrase adaptée à une situation vécue sans nommer de personne."],
+["Le chef du calme","Retour au calme","2-3","Tous","Un enfant propose trois gestes lents. Tout le monde les suit en respirant normalement. Changez de guide après un tour.","Retrouver une attention commune.","Le guide peut choisir uniquement des gestes des mains."],
+["Le dilemme du partage","Expression","4-5","Élémentaire","Demandez : « Il ne reste qu'un ballon et deux groupes veulent jouer. Que peut-on proposer ? » Recueillez plusieurs solutions.","Négocier et rechercher des solutions équitables.","Discutez des avantages et limites de chaque idée."],
+["La chaîne des mercis","Vivre-ensemble","2-3","Tous","Les enfants qui le souhaitent remercient quelqu'un pour une action concrète. Personne n'est obligé de citer un camarade.","Reconnaître les gestes d'entraide.","Remerciez aussi le groupe pour une réussite collective."],
+["La marche des animaux","Retour au calme","2-3","Maternelle","Marchez sur place comme une tortue, puis comme un chat qui s'étire, et terminez immobiles comme une statue.","Moduler son énergie et son mouvement.","Laissez un enfant choisir l'animal suivant."],
+["Le cercle d'écoute","Expression","4-5","Tous","Une personne parle brièvement d'un sujet léger. Les autres écoutent sans couper la parole, puis reformulent une idée entendue.","Écouter activement et respecter la parole.","Utilisez un objet imaginaire comme micro de parole."],
+["Le oui et le non respectés","Jeu de rôle","4-5","Tous","Jouez une demande de prêt d'objet. Entraînez-vous à entendre « oui », « non » ou « pas maintenant » et à répondre sans pression.","Comprendre le consentement et respecter les limites.","Proposez des formulations pour répondre calmement."],
+["Le pont invisible","Coopération","4-5","Tous","Le groupe doit imaginer comment traverser une rivière fictive en ne posant les pieds que sur des pierres imaginaires. Chaque idée doit être entendue.","Imaginer ensemble et résoudre un défi collectif.","Demandez au groupe d'expliquer son plan avant de le jouer."],
+["Le visage en dessin","Émotions","2-3","Maternelle","Avec le visage ou les mains, montrez une émotion simple. Les autres peuvent proposer ce qu'ils observent, sans imposer une interprétation.","Repérer des expressions émotionnelles.","Ajoutez des émotions plus nuancées pour les plus grands."],
+["Le mot interdit","Expression","4-5","Élémentaire","Faites deviner un objet courant sans prononcer son nom. Les autres posent des questions ou proposent des réponses chacun leur tour.","Écouter, expliquer et attendre son tour.","Choisissez des thèmes liés à l'école ou aux loisirs."],
+["Le cercle de confiance","Vivre-ensemble","2-3","Tous","Chacun peut citer une chose qui aide à se sentir bien dans un groupe : être écouté, pouvoir demander de l'aide, se sentir respecté.","Identifier les conditions d'un climat sécurisant.","Le groupe choisit une règle positive à essayer."],
+["La pause épaules","Retour au calme","2-3","Tous","Haussez doucement les épaules puis relâchez-les. Étirez les bras si c'est confortable et soufflez lentement. Aucun mouvement ne doit faire mal.","Relâcher les tensions et faire une transition calme.","Faites les mouvements assis ou debout."],
+["Le médiateur imaginaire","Jeu de rôle","4-5","Élémentaire","Deux personnages ne sont pas d'accord sur un jeu. Un troisième propose à chacun de parler à tour de rôle, puis cherche avec eux une solution.","S'entraîner à la médiation et à l'écoute.","Demandez aux personnages ce dont ils ont besoin."],
+["La ronde des idées","Coopération","4-5","Tous","Choisissez un thème, comme les jeux de cour. Chacun propose une idée différente, ou peut passer son tour. Accueillez toutes les propositions sans jugement.","Valoriser la créativité et la participation.","Cherchez ensemble une idée qui rassemble plusieurs propositions."],
+["Le thermomètre du bruit","Retour au calme","2-3","Tous","Montrez trois niveaux imaginaires : 1 pour le silence, 2 pour une voix douce, 3 pour une voix de groupe. Entraînez-vous à passer du niveau 3 au niveau 1.","Adapter le volume de sa voix au contexte.","Demandez quel niveau est utile dans différents lieux."],
+["Le jeu des ressemblances","Vivre-ensemble","4-5","Tous","Trouvez des points communs non sensibles : aimer courir, dessiner, construire ou écouter des histoires. Personne n'a à révéler d'information personnelle.","Créer du lien et reconnaître les intérêts communs.","Cherchez une ressemblance partagée par tout le groupe."],
+["La phrase à compléter","Émotions","2-3","Élémentaire","Proposez : « Quand je suis contrarié, cela m'aide de… » Les enfants peuvent répondre, écouter ou passer leur tour.","Identifier ses besoins et ses stratégies d'apaisement.","Utilisez aussi « Quand je suis fier… » ou « Quand je suis inquiet… »."],
+["Le théâtre des excuses","Jeu de rôle","4-5","Tous","Jouez une situation où un personnage a blessé un autre avec des mots. Essayez une excuse qui reconnaît le geste et propose de réparer.","Prendre ses responsabilités et réparer une relation.","Demandez ce qui rend une excuse sincère."],
+["Le défi des prénoms","Coopération","2-3","Tous","En cercle, chacun dit le prénom de la personne suivante avant de lui passer la parole. Prenez votre temps et aidez-vous si besoin.","Développer l'attention au groupe.","Ajoutez un geste discret pour accompagner le prénom."],
+["L'histoire à plusieurs","Expression","4-5","Tous","Commencez une histoire avec une phrase. Chaque volontaire ajoute une phrase pour poursuivre l'aventure, sans obligation de parler.","Développer l'imagination et écouter les contributions.","Choisissez une histoire qui met en scène l'entraide."],
+["Le choix des solutions","Expression","4-5","Tous","Présentez un petit problème du quotidien et demandez au groupe de proposer au moins trois solutions différentes avant d'en choisir une.","Développer la flexibilité et la prise de décision.","Demandez quelle solution est la plus sûre et respectueuse."],
+["Le feu des paroles","Vivre-ensemble","2-3","Élémentaire","Triez des exemples : parole qui blesse, parole neutre ou parole qui aide. Discutez du contexte et du fait qu'une phrase peut être reçue différemment.","Prendre conscience de l'impact des mots.","Transformez ensemble une parole blessante en demande respectueuse."],
+["Le mime coopératif","Jeu de rôle","2-3","Tous","Un enfant mime une activité quotidienne. Le groupe essaie de deviner en laissant chacun proposer une réponse à son tour.","Observer et participer dans le respect.","Mimez une action qui demande de l'entraide."],
+["La minute gratitude","Émotions","2-3","Tous","Prenez un instant pour penser à une chose agréable ou utile de la journée. Les volontaires peuvent la partager, sans obligation.","Porter attention aux expériences positives.","Remerciez une personne ou le groupe pour une action concrète."],
+["La mission entraide","Coopération","4-5","Tous","Ensemble, imaginez une petite action pour faciliter la journée du groupe : aider à ranger, accueillir quelqu'un ou rappeler une consigne avec gentillesse.","Passer de l'intention à une action solidaire.","Choisissez une mission réalisable dès aujourd'hui."],
+["Le détecteur de besoins","Émotions","4-5","Élémentaire","Dans une situation fictive, demandez ce dont chaque personnage pourrait avoir besoin : être écouté, avoir de l'espace, comprendre la règle ou demander de l'aide.","Faire le lien entre émotions, besoins et actions.","Rappelez qu'il faut demander à la personne plutôt que supposer."],
+["Le salut au choix","Vivre-ensemble","2-3","Maternelle","Proposez plusieurs salutations sans contact : signe de la main, sourire, petit geste ou simple bonjour. Chacun choisit celle qui lui convient.","Respecter les préférences et accueillir chacun.","Inventez un salut collectif que personne n'est obligé d'utiliser."],
+["Le groupe en une phrase","Expression","2-3","Tous","Terminez la transition avec une phrase collective : « Pour bien commencer, nous allons… » Chaque enfant peut proposer un mot.","Se projeter positivement dans l'activité suivante.","Choisissez une phrase qui rappelle une valeur du groupe."]
+];
+
+let current = null;
+function drawActivity(){
+ const age = document.getElementById("age").value;
+ const duration = document.getElementById("duration").value;
+ const category = document.getElementById("category").value;
+ const filtered = activities.filter(a =>
+  (age === "Tous" || a[3] === "Tous" || a[3] === age) &&
+  (duration === "Tous" || a[2] === duration) &&
+  (category === "Toutes" || a[1] === category)
+ );
+ if(!filtered.length){
+  document.getElementById("activityTitle").textContent="Aucune activité trouvée";
+  document.getElementById("intro").textContent="Essaie d'élargir les filtres.";
+  document.getElementById("pills").innerHTML="";
+  document.getElementById("instructions").textContent="Change un ou plusieurs critères puis relance le tirage.";
+  document.getElementById("objective").textContent="";
+  document.getElementById("variant").textContent="";
+  current=null;return;
+ }
+ const choices = filtered.filter(a => a !== current);
+ current = choices[Math.floor(Math.random()*choices.length)] || filtered[0];
+ document.getElementById("activityTitle").textContent=current[0];
+ document.getElementById("intro").textContent="C'est parti ! Prenez quelques instants pour tester cette activité avec le groupe.";
+ document.getElementById("pills").innerHTML=
+  `<span class="pill">⏱️ ${current[2]} min</span><span class="pill">👥 ${current[3]}</span><span class="pill">🏷️ ${current[1]}</span><span class="pill">🧰 Sans matériel</span>`;
+ document.getElementById("instructions").textContent=current[4];
+ document.getElementById("objective").textContent=current[5];
+ document.getElementById("variant").textContent=current[6];
+ document.getElementById("copyMessage").textContent="";
+}
+document.getElementById("draw").addEventListener("click",drawActivity);
+document.getElementById("again").addEventListener("click",drawActivity);
+document.getElementById("copy").addEventListener("click",async()=>{
+ if(!current){document.getElementById("copyMessage").textContent="Tire d'abord une activité.";return;}
+ const text=`${current[0]}\nDurée : ${current[2]} minutes\nPublic : ${current[3]}\nThématique : ${current[1]}\n\nConsignes : ${current[4]}\n\nObjectif : ${current[5]}\n\nVariante : ${current[6]}`;
+ try{
+  await navigator.clipboard.writeText(text);
+  document.getElementById("copyMessage").textContent="Consignes copiées !";
+ }catch(e){
+  document.getElementById("copyMessage").textContent="La copie automatique n'est pas disponible sur cet appareil. Sélectionne le texte des consignes pour le copier.";
+ }
+});
+</script>
+</body>
+</html>
